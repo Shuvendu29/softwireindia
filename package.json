@@ -1,0 +1,42 @@
+{
+  "name": "softwireindia-coming-soon",
+  "version": "1.0.0",
+  "description": "SoftWire India - AI Innovation Coming Soon Page",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server -p 8000",
+    "dev": "npx live-server --port=8000",
+    "build": "echo 'Static site - no build step required'",
+    "preview": "npx http-server -p 8000",
+    "test": "echo 'No tests specified'",
+    "lint": "echo 'No linting configured'",
+    "deploy": "echo 'Deploy using Render.com static site deployment'"
+  },
+  "keywords": [
+    "coming-soon",
+    "ai",
+    "software-development",
+    "innovation",
+    "animation",
+    "particle-effects",
+    "responsive",
+    "landing-page"
+  ],
+  "author": "SoftWire India",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/softwireindia.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/softwireindia/issues"
+  },
+  "homepage": "https://softwireindia.com",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
