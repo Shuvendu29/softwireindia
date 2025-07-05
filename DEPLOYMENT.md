@@ -62,23 +62,23 @@ This guide will help you deploy your SoftWire India coming soon page to Render.c
    - Login to your account
    - Navigate to "Domain Management" or "DNS Management"
 
-3. **Configure DNS Records**
+3. **Configure DNS Records in BigRock**
    
-   **For Root Domain (softwireindia.com):**
-   ```
-   Type: A
-   Name: @
-   Value: 216.24.57.1
-   TTL: 3600
-   ```
+   You need to add these records in your BigRock DNS management:
    
-   **For WWW Subdomain:**
-   ```
-   Type: CNAME
-   Name: www
-   Value: softwireindia-coming-soon.onrender.com
-   TTL: 3600
-   ```
+   **Step 3a: Add A Record for Root Domain**
+   - Click "+Add A Record" in the A section
+   - Name: `@` (or leave blank for root domain)
+   - Value: `216.24.57.1` (Render's IP address)
+   - TTL: `3600`
+   
+   **Step 3b: Add CNAME Record for WWW**
+   - Click "+Add CNAME Record" in the CNAME section  
+   - Name: `www`
+   - Value: `your-render-site.onrender.com` (replace with your actual Render URL)
+   - TTL: `3600`
+   
+   **Important:** You'll get your exact Render URL after deploying on Render.com
 
 4. **Add Custom Domain in Render**
    - Go to your Render dashboard
