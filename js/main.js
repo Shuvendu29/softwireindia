@@ -1,7 +1,8 @@
 // Main JavaScript file for SoftWire India Coming Soon Page
 class SoftWireApp {
     constructor() {
-        this.countdownDate = new Date('2025-08-01T00:00:00').getTime();
+        // Launch date: 88 days from July 6, 2025 = October 2, 2025
+        this.countdownDate = new Date('2025-10-02T00:00:00').getTime();
         this.init();
     }
     
