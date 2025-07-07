@@ -2,112 +2,117 @@
 
 This guide will help you deploy your SoftWire India coming soon page to Render.com and configure your BigRock domain.
 
-## 🚀 Complete Deployment Process
+## 🚀 Updated Deployment Process for www.softwireindia.com
 
-### Step 1: Prepare Your Repository
+### ✅ Code Updated Successfully!
+- **Countdown now starts from 88 days** (October 2, 2025)
+- **Code pushed to GitHub** and ready for deployment
 
-1. **Initialize Git Repository**
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: SoftWire India coming soon page"
-   ```
+### Step 1: Complete Render Deployment
 
-2. **Create GitHub Repository**
-   - Go to GitHub.com
-   - Create a new repository named `softwireindia`
-   - Don't initialize with README (you already have one)
+1. **Go back to your Render dashboard**
+   - Visit: [dashboard.render.com](https://dashboard.render.com)
+   - Find your `softwireindia-coming-soon` service
 
-3. **Push to GitHub**
-   ```bash
-   git remote add origin https://github.com/yourusername/softwireindia.git
-   git branch -M main
-   git push -u origin main
-   ```
+2. **Fix Build Settings**
+   - Go to Settings
+   - **Build Command**: Clear completely (make it empty)
+   - **Publish Directory**: Keep as `.`
+   - **Auto-Deploy**: Keep as "On Commit"
+   - **Save changes**
 
-### Step 2: Deploy on Render.com
-
-1. **Sign up/Login to Render**
-   - Go to [render.com](https://render.com)
-   - Sign up or login with your GitHub account
-
-2. **Create New Static Site**
-   - Click "New +" button
-   - Select "Static Site"
-   - Choose "Connect a repository"
-   - Select your `softwireindia` repository
-
-3. **Configure Deployment Settings**
-   ```
-   Name: softwireindia-coming-soon
-   Branch: main
-   Build Command: (leave empty)
-   Publish Directory: . (dot for root)
-   Auto-Deploy: Yes
-   ```
-
-4. **Deploy**
-   - Click "Create Static Site"
+3. **Manual Deploy (if needed)**
+   - Go to "Deploys" tab
+   - Click "Manual Deploy" → "Deploy Latest Commit"
    - Wait for deployment to complete
-   - Your site will be available at: `https://softwireindia-coming-soon.onrender.com`
 
-### Step 3: Configure Custom Domain with BigRock
+4. **Get Your Render URL**
+   - Copy your live URL (something like: `https://softwireindia-coming-soon.onrender.com`)
+   - **Test this URL first** to ensure everything works
 
-1. **Get Your Render Site URL**
-   - From Render dashboard, copy your site URL
-   - It will be something like: `softwireindia-coming-soon.onrender.com`
+### Step 2: Configure DNS in BigRock for www.softwireindia.com
 
-2. **Login to BigRock**
-   - Go to [BigRock.com](https://bigrock.com)
-   - Login to your account
-   - Navigate to "Domain Management" or "DNS Management"
+**Important:** Replace `YOUR-RENDER-URL` with your actual Render URL from Step 1.
 
-3. **Configure DNS Records in BigRock**
-   
-   You need to add these records in your BigRock DNS management:
-   
-   **Step 3a: Add A Record for Root Domain**
-   - Click "+Add A Record" in the A section
-   - Name: `@` (or leave blank for root domain)
-   - Value: `216.24.57.1` (Render's IP address)
-   - TTL: `3600`
-   
-   **Step 3b: Add CNAME Record for WWW**
-   - Click "+Add CNAME Record" in the CNAME section  
-   - Name: `www`
-   - Value: `your-render-site.onrender.com` (replace with your actual Render URL)
-   - TTL: `3600`
-   
-   **Important:** You'll get your exact Render URL after deploying on Render.com
+**In your BigRock DNS Management:**
 
-4. **Add Custom Domain in Render**
-   - Go to your Render dashboard
-   - Select your deployed site
-   - Go to "Settings" → "Custom Domains"
-   - Add domain: `softwireindia.com`
-   - Add domain: `www.softwireindia.com`
+1. **Add A Record for Root Domain**
+   ```
+   Type: A
+   Name: @ (or leave blank)
+   Value: 216.24.57.1
+   TTL: 3600
+   ```
 
-5. **SSL Certificate**
-   - Render automatically provides SSL certificates
-   - Wait 24-48 hours for DNS propagation
-   - Your site will be available at: `https://softwireindia.com`
+2. **Add CNAME Record for WWW**
+   ```
+   Type: CNAME
+   Name: www
+   Value: YOUR-RENDER-URL.onrender.com
+   TTL: 3600
+   ```
 
-### Step 4: Verify Deployment
+### Step 3: Add Custom Domain in Render
 
-1. **Check Site Loading**
-   - Visit `https://softwireindia.com`
-   - Verify all animations work
-   - Test responsive design on mobile
+1. **In Render Dashboard → Settings → Custom Domains**
+2. **Add these domains:**
+   - `softwireindia.com`
+   - `www.softwireindia.com`
+3. **Save changes**
 
-2. **Test Email Form**
-   - Submit test email
-   - Check console for errors
-   - Verify form validation
+### Step 4: Wait for Propagation
 
-3. **Performance Check**
-   - Use Google PageSpeed Insights
-   - Test loading speed
-   - Check mobile performance
+- **DNS propagation**: 24-48 hours
+- **SSL certificate**: Automatic from Render
+- **Test URLs**:
+  - `https://www.softwireindia.com`
+  - `https://softwireindia.com`
+
+## 🎯 What You'll See:
+
+Your beautiful coming soon page with:
+- ✅ **88-day countdown** starting from today
+- ✅ **AI-themed animations** and particle effects
+- ✅ **Email subscription form**
+- ✅ **Complete Login/Registration system**
+- ✅ **Google OAuth integration** (configurable)
+- ✅ **Phone number verification** with OTP
+- ✅ **Responsive design** for all devices
+- ✅ **Professional branding** for SoftWire India
+
+## 🔐 Authentication Features Added:
+
+**New Files Created:**
+- `auth.html` - Login and Registration page
+- `css/auth.css` - Authentication styling
+- `js/auth.js` - Authentication logic
+- `js/auth-particles.js` - Background animations
+
+**Features Include:**
+- ✅ **Email/Password Registration**
+- ✅ **Google Sign-In Integration**
+- ✅ **Phone Number Registration**
+- ✅ **OTP Verification System**
+- ✅ **Password Strength Checking**
+- ✅ **Form Validation**
+- ✅ **Responsive Design**
+- ✅ **Beautiful UI with animations**
+
+**Demo Credentials:**
+- Email: `demo@softwireindia.com`
+- Password: `Demo123!`
+- OTP: Any 6-digit number
+
+**Google OAuth Setup:**
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select existing
+3. Enable Google+ API
+4. Create OAuth 2.0 credentials
+5. Replace `YOUR_GOOGLE_CLIENT_ID` in `auth.html`
+
+**Access the Auth System:**
+- Visit: `https://www.softwireindia.com/auth.html`
+- Or click "Login/Register" on the homepage
 
 ## 🔧 Post-Deployment Configuration
 
@@ -148,96 +153,187 @@ This guide will help you deploy your SoftWire India coming soon page to Render.c
 
 ## 🛠️ Troubleshooting
 
-### Common Issues
+### 🚨 URGENT: Site Access Issues from Other Devices
 
-1. **DNS Not Propagating**
-   - Wait 24-48 hours
-   - Clear DNS cache: `ipconfig /flushdns` (Windows)
-   - Check propagation: use dnschecker.org
+**Problem**: Cannot access www.softwireindia.com from other devices
+**Status**: DNS is resolving correctly, but there may be deployment or configuration issues
 
-2. **Site Not Loading**
-   - Check DNS records are correct
-   - Verify Render deployment status
-   - Check browser console for errors
+**Immediate Actions Required:**
 
-3. **Animations Not Working**
-   - Check JavaScript console for errors
-   - Verify all script files are loading
-   - Test on different browsers
+1. **Check Render Deployment Status**
+   - Go to [dashboard.render.com](https://dashboard.render.com)
+   - Find your `softwireindia-coming-soon` service
+   - Check if deployment is "Live" and green
+   - If not, redeploy manually
 
-4. **Mobile Issues**
-   - Test on actual devices
-   - Check responsive breakpoints
-   - Verify touch interactions
+2. **Verify Build Settings in Render**
+   - Settings → Build Command: **MUST BE EMPTY**
+   - Settings → Publish Directory: **MUST BE `.`**
+   - Settings → Auto-Deploy: **MUST BE ENABLED**
+   - Save changes and redeploy if needed
 
-### Performance Issues
+3. **Check Custom Domain Configuration**
+   - In Render → Settings → Custom Domains
+   - Ensure both domains are added and verified:
+     - `softwireindia.com` ✅
+     - `www.softwireindia.com` ✅
+   - SSL status should be "Active"
 
-1. **Slow Loading**
-   - Optimize images
-   - Minimize JavaScript
-   - Reduce particle count on mobile
+4. **Test Direct Render URL First**
+   - Visit your direct Render URL (e.g., `https://softwireindia-coming-soon.onrender.com`)
+   - If this doesn't work, the issue is with your deployment
+   - If this works, the issue is with DNS/custom domain
 
-2. **High CPU Usage**
-   - Check particle system performance
-   - Reduce animation complexity
-   - Implement performance monitoring
+## 🔧 Complete Fix for Device Access Issues
 
-## 📊 Monitoring & Maintenance
+### Quick Diagnostic Steps
 
-### Regular Checks
+**Step 1: Test Your Direct Render URL**
+```bash
+# Open this URL in any browser on any device
+https://softwireindia-coming-soon.onrender.com
+```
 
-1. **Weekly**
-   - Check site uptime
-   - Monitor form submissions
-   - Review analytics data
+**Step 2: Check DNS Propagation**
+```bash
+# Windows Command Prompt
+nslookup www.softwireindia.com
+nslookup softwireindia.com
+```
 
-2. **Monthly**
-   - Update countdown date if needed
-   - Check for broken links
-   - Review performance metrics
+**Step 3: Clear DNS Cache**
+```bash
+# Windows
+ipconfig /flushdns
+```
 
-3. **Quarterly**
-   - Update dependencies
-   - Review and optimize code
-   - Check for accessibility issues
+### 🚀 Complete Fix Process
 
-### Updates
+#### Fix 1: Ensure Render Deployment is Working
 
-1. **Content Updates**
-   - Edit HTML directly
-   - Commit and push changes
-   - Auto-deploy will update site
+1. **Login to Render Dashboard**
+   - Go to [dashboard.render.com](https://dashboard.render.com)
+   - Find your service: `softwireindia-coming-soon`
 
-2. **Design Changes**
-   - Update CSS files
-   - Test thoroughly
-   - Deploy updates
+2. **Check Deployment Status**
+   - Status should be "Live" with green indicator
+   - If not, click "Manual Deploy" → "Deploy Latest Commit"
 
-## 🔐 Security Considerations
+3. **Verify Settings**
+   ```
+   Build Command: [EMPTY - DELETE ANY CONTENT]
+   Publish Directory: .
+   Auto-Deploy: Yes
+   ```
 
-1. **HTTPS Only**
-   - Render provides SSL automatically
-   - Redirect HTTP to HTTPS
+4. **Test Direct URL**
+   - Copy your `.onrender.com` URL
+   - Test on multiple devices
+   - If this fails, your deployment is broken
 
-2. **Content Security Policy**
-   - Review CSP headers
-   - Restrict resource loading
+#### Fix 2: Fix Custom Domain Configuration
 
-3. **Regular Updates**
-   - Keep dependencies updated
-   - Monitor security advisories
+1. **In Render Dashboard → Settings → Custom Domains**
+   - Remove existing domains if any
+   - Add fresh: `softwireindia.com`
+   - Add fresh: `www.softwireindia.com`
+   - Wait for SSL verification
 
-## 📞 Support
+2. **Verify DNS in BigRock**
+   ```
+   A Record:
+   Name: @
+   Value: 216.24.57.1
+   TTL: 3600
+   
+   CNAME Record:
+   Name: www
+   Value: softwireindia-coming-soon.onrender.com
+   TTL: 3600
+   ```
 
-If you encounter issues:
+#### Fix 3: Force DNS Refresh
+
+1. **On Each Device**
+   ```bash
+   # Windows
+   ipconfig /flushdns
+   
+   # Mac/Linux
+   sudo dscacheutil -flushcache
+   
+   # Mobile: Restart device or change to Google DNS
+   ```
+
+2. **Test Multiple DNS Servers**
+   - Try 8.8.8.8 (Google)
+   - Try 1.1.1.1 (Cloudflare)
+   - Try your ISP's DNS
+
+#### Fix 4: Browser-Specific Issues
+
+1. **Clear Browser Cache**
+   - Press `Ctrl + Shift + R` (hard refresh)
+   - Clear all browsing data
+   - Try incognito/private mode
+
+2. **Test Different Browsers**
+   - Chrome
+   - Firefox
+   - Safari
+   - Edge
+
+#### Fix 5: Network-Specific Issues
+
+1. **Try Different Networks**
+   - Mobile data vs WiFi
+   - Different WiFi networks
+   - VPN if available
+
+2. **Check Firewall/Antivirus**
+   - Temporarily disable
+   - Add exception for the domain
+
+### 🎯 Expected Results After Fix
+
+Your site should load with:
+- ✅ Beautiful AI-themed landing page
+- ✅ 88-day countdown timer
+- ✅ Smooth animations and particle effects
+- ✅ Working email subscription form
+- ✅ Responsive design on all devices
+
+### 🔍 Advanced Debugging
+
+If issues persist, check:
+
+1. **Console Errors**
+   - Press F12 → Console tab
+   - Look for red error messages
+   - Share screenshots if needed
+
+2. **Network Tab**
+   - F12 → Network tab
+   - Reload page
+   - Check for failed requests
+
+3. **Security Issues**
+   - Mixed content warnings
+   - SSL certificate errors
+   - CORS issues
+
+### 📞 Get Help
+
+**If you're still having issues:**
 
 1. **Check Render Status**
-   - Visit Render status page
-   - Check for platform issues
+   - Visit [status.render.com](https://status.render.com)
+   - Look for platform issues
 
-2. **Review Logs**
-   - Check deployment logs in Render
-   - Review browser console
+2. **Check BigRock Status**
+   - Login to BigRock account
+   - Verify domain is active
+   - Check DNS management panel
 
 3. **Contact Support**
    - Render support for deployment issues
