@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="css/auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- 
+    TODO: Replace with your actual Google OAuth Client ID
+    Get it from: https://console.cloud.google.com/apis/credentials
+    -->
     <meta name="google-signin-client_id" content="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com">
 </head>
 <body class="auth-page">
@@ -169,12 +173,12 @@
                         <div class="modal-body">
                             <p>Enter the 6-digit code sent to your phone number</p>
                             <div class="otp-input-container">
-                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
-                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
-                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
-                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
-                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
-                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]">
+                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" title="Enter first digit of OTP" aria-label="OTP digit 1">
+                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" title="Enter second digit of OTP" aria-label="OTP digit 2">
+                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" title="Enter third digit of OTP" aria-label="OTP digit 3">
+                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" title="Enter fourth digit of OTP" aria-label="OTP digit 4">
+                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" title="Enter fifth digit of OTP" aria-label="OTP digit 5">
+                                <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" title="Enter sixth digit of OTP" aria-label="OTP digit 6">
                             </div>
                             <div class="otp-actions">
                                 <button class="auth-btn secondary" id="resendOtp">Resend Code</button>
