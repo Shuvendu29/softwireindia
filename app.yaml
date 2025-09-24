@@ -1,0 +1,84 @@
+# Google App Engine configuration for SoftWire India
+# Static website deployment configuration
+
+runtime: python39
+
+# Static file handlers
+handlers:
+  # Serve the main pages
+  - url: /
+    static_files: index.html
+    upload: index.html
+
+  - url: /auth
+    static_files: auth.html
+    upload: auth.html
+
+  - url: /auth.html
+    static_files: auth.html
+    upload: auth.html
+
+  # Serve CSS files
+  - url: /css
+    static_dir: css
+
+  # Serve JavaScript files
+  - url: /js
+    static_dir: js
+
+  # Serve images and favicon
+  - url: /images
+    static_dir: images
+
+  # Serve favicon at root
+  - url: /favicon.ico
+    static_files: images/favicon.svg
+    upload: images/favicon.svg
+
+  # Serve robots.txt and sitemap.xml
+  - url: /robots.txt
+    static_files: robots.txt
+    upload: robots.txt
+
+  - url: /sitemap.xml
+    static_files: sitemap.xml
+    upload: sitemap.xml
+
+  # Catch-all for SPA routing
+  - url: /.*
+    static_files: index.html
+    upload: index.html
+
+# Environment variables
+env_variables:
+  # Set to production
+  NODE_ENV: production
+
+# Instance configuration
+automatic_scaling:
+  min_instances: 0
+  max_instances: 10
+  min_idle_instances: 0
+  max_idle_instances: 1
+  min_pending_latency: 30ms
+  max_pending_latency: automatic
+  max_concurrent_requests: 50
+
+# Security headers
+default_expiration: "1d"
+
+# Skip files from deployment
+skip_files:
+  - ^(.*/)?#.*#$
+  - ^(.*/)?.*~$
+  - ^(.*/)?.*\.py[co]$
+  - ^(.*/)?.*/RCS/.*$
+  - ^(.*/)?\..*$
+  - ^(.*/)?tests/.*$
+  - ^(.*/)?test/.*$
+  - ^(.*/)?node_modules/.*$
+  - ^(.*/)?\.git/.*$
+  - ^(.*/)?\.gitignore$
+  - ^(.*/)?README.*$
+  - ^(.*/)?setup-.*$
+  - ^(.*/)?.*\.md$

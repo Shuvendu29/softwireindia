@@ -1,0 +1,18 @@
+# Ignore these files when deploying to Google Cloud
+.git/
+.gitignore
+node_modules/
+*.md
+README*
+setup-*
+.vscode/
+.env*
+*.log
+*.tmp
+test/
+tests/
+coverage/
+.nyc_output/
+*.backup
+.DS_Store
+Thumbs.db

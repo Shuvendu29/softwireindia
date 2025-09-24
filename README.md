@@ -17,7 +17,30 @@ A modern, animated coming soon page for SoftWire India - an AI innovation and so
 
 ## 🚀 Live Demo
 
-Visit the live site: [https://softwireindia.com](https://softwireindia.com)
+Visit the live site: [https://www.softwireindia.com](https://www.softwireindia.com)
+
+## ☁️ Deployment Options
+
+### Google Cloud Platform (Recommended)
+- **Fast**: Global CDN distribution
+- **Secure**: Automatic SSL certificates
+- **Scalable**: Auto-scaling based on traffic
+- **Reliable**: 99.95% uptime SLA
+
+**Quick Deploy:**
+```bash
+# Windows
+deploy-gcp.bat
+
+# Mac/Linux
+./deploy-gcp.sh
+```
+
+### Alternative Platforms
+- **Render.com**: Auto-deploy from GitHub
+- **Netlify**: Static site hosting
+- **Vercel**: Edge network deployment
+- **GitHub Pages**: Free hosting for open source
 
 ## 📁 Project Structure
 
@@ -173,6 +196,31 @@ npm run test
 # Lint code
 npm run lint
 ```
+
+## 🚀 Deployment Guides
+
+### Google Cloud Platform
+Comprehensive deployment guide: [`GOOGLE_CLOUD_DEPLOYMENT.md`](GOOGLE_CLOUD_DEPLOYMENT.md)
+
+**Quick Commands:**
+```bash
+# Deploy to Google Cloud
+./deploy-gcp.sh              # Linux/Mac
+deploy-gcp.bat               # Windows
+
+# Setup custom domain
+./setup-domain-gcp.sh        # Linux/Mac
+setup-domain-gcp.bat         # Windows
+```
+
+### Render.com
+Alternative deployment guide: [`DEPLOYMENT.md`](DEPLOYMENT.md)
+
+**Features:**
+- Auto-deploy from GitHub
+- Free SSL certificates
+- Custom domain support
+- Global CDN
 
 ## 🎯 Customization
 

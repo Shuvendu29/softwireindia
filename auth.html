@@ -8,7 +8,12 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!-- Google APIs (optional - fallback if not loaded) -->
+    <script>
+        window.gapi = window.gapi || {};
+        window.gapi.load = window.gapi.load || function() { console.warn('Google API not available'); };
+    </script>
+    <script src="https://apis.google.com/js/platform.js" async defer onerror="console.warn('Google API failed to load')"></script>
     <!-- 
     TODO: Replace with your actual Google OAuth Client ID
     Get it from: https://console.cloud.google.com/apis/credentials
@@ -220,5 +225,19 @@
     <!-- Scripts -->
     <script src="js/auth-particles.js"></script>
     <script src="js/auth.js"></script>
+    
+    <!-- Fallback script to ensure login form is visible -->
+    <script>
+        // Ensure login form is visible even if main script fails
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loginContainer = document.querySelector('.login-container');
+                if (loginContainer && !loginContainer.classList.contains('active')) {
+                    loginContainer.classList.add('active');
+                    console.log('✅ Fallback: Login form made visible');
+                }
+            }, 500);
+        });
+    </script>
 </body>
 </html>

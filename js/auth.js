@@ -8,20 +8,28 @@ class AuthManager {
     }
 
     init() {
-        // Initialize Google Sign-In
-        this.initGoogleSignIn();
-        
         // Show login form by default
         this.showForm('login');
+        
+        // Initialize Google Sign-In (with error handling)
+        this.initGoogleSignIn();
     }
 
     initGoogleSignIn() {
         // This will be configured when you get your Google OAuth credentials
-        gapi.load('auth2', () => {
-            gapi.auth2.init({
-                client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'
-            });
-        });
+        try {
+            if (typeof gapi !== 'undefined') {
+                gapi.load('auth2', () => {
+                    gapi.auth2.init({
+                        client_id: 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'
+                    });
+                });
+            } else {
+                console.warn('Google API not loaded. Google OAuth will not be available.');
+            }
+        } catch (error) {
+            console.warn('Error initializing Google Sign-In:', error);
+        }
     }
 
     setupEventListeners() {
@@ -223,7 +231,17 @@ class AuthManager {
 
     async handleGoogleAuth(type) {
         try {
+            if (typeof gapi === 'undefined' || !gapi.auth2) {
+                this.showNotification('Google authentication is not available. Please try email/password login.', 'error');
+                return;
+            }
+
             const authInstance = gapi.auth2.getAuthInstance();
+            if (!authInstance) {
+                this.showNotification('Google authentication is not properly initialized.', 'error');
+                return;
+            }
+
             const user = await authInstance.signIn();
             const profile = user.getBasicProfile();
 
@@ -250,7 +268,7 @@ class AuthManager {
             }
         } catch (error) {
             console.error('Google auth error:', error);
-            this.showNotification('Google authentication failed.', 'error');
+            this.showNotification('Google authentication failed. Please try email/password login.', 'error');
         }
     }
 
@@ -593,7 +611,17 @@ class AuthManager {
 
 // Initialize auth manager when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new AuthManager();
+    try {
+        new AuthManager();
+        console.log('✅ SoftWire India Authentication System Loaded');
+    } catch (error) {
+        console.error('❌ Error initializing authentication system:', error);
+        // Fallback: Ensure login form is visible
+        const loginContainer = document.querySelector('.login-container');
+        if (loginContainer) {
+            loginContainer.classList.add('active');
+        }
+    }
 });
 
 // Demo credentials info
