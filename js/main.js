@@ -1,8 +1,10 @@
 // Main JavaScript file for SoftWire India Coming Soon Page
+// Version: 20251003130614 - CELEBRATION BANNERS REMOVED
+// Last modified: Oct 3, 2025 - All celebration code eliminated
 class SoftWireApp {
     constructor() {
-        // Launch date: 88 days from July 6, 2025 = October 2, 2025
-        this.countdownDate = new Date('2025-10-02T00:00:00').getTime();
+        // Set to a future date to prevent auto-celebration
+        this.countdownDate = new Date('2026-01-01T00:00:00').getTime();
         this.init();
     }
     
@@ -11,6 +13,7 @@ class SoftWireApp {
         this.setupEventListeners();
         this.initializeCountdown();
         this.initializeEmailForm();
+        this.initializeContactForm();
         this.initializeThemeToggle();
         this.initializeLazyLoading();
         this.initializeServiceWorker();
@@ -206,32 +209,11 @@ class SoftWireApp {
     handleCountdownComplete() {
         clearInterval(this.countdownInterval);
         
-        // Show launch celebration
-        this.showLaunchCelebration();
-        
         // Update UI for launch
         this.updateUIForLaunch();
     }
     
-    showLaunchCelebration() {
-        // Create confetti effect
-        this.createConfetti();
-        
-        // Show celebration message
-        const celebrationMessage = document.createElement('div');
-        celebrationMessage.className = 'celebration-message';
-        celebrationMessage.innerHTML = `
-            <div class="celebration-content">
-                <h2>🎉 We're Live! 🎉</h2>
-                <p>SoftWire India is officially launched!</p>
-                <button onclick="window.location.reload()" class="celebration-btn">
-                    Explore Now
-                </button>
-            </div>
-        `;
-        
-        document.body.appendChild(celebrationMessage);
-    }
+
     
     initializeEmailForm() {
         const form = document.getElementById('emailForm');
@@ -607,38 +589,15 @@ class SoftWireApp {
         }, 3000);
     }
     
-    createConfetti() {
-        // Create confetti animation
-        const colors = ['#ff6b6b', '#0066cc', '#00a8ff', '#4caf50', '#ff9800'];
-        
-        for (let i = 0; i < 50; i++) {
-            const confetti = document.createElement('div');
-            confetti.style.cssText = `
-                position: fixed;
-                width: 10px;
-                height: 10px;
-                background: ${colors[Math.floor(Math.random() * colors.length)]};
-                top: -10px;
-                left: ${Math.random() * 100}%;
-                animation: confettiFall ${Math.random() * 3 + 2}s linear forwards;
-                z-index: 10000;
-            `;
-            
-            document.body.appendChild(confetti);
-            
-            setTimeout(() => {
-                confetti.remove();
-            }, 5000);
-        }
-    }
+
     
     updateUIForLaunch() {
         // Update countdown section
         const countdownSection = document.querySelector('.countdown-section');
         if (countdownSection) {
             countdownSection.innerHTML = `
-                <h3>🎉 We're Live! 🎉</h3>
-                <p>Welcome to SoftWire India - Your AI Innovation Partner</p>
+                <h3>Welcome to SoftWire India</h3>
+                <p>Your AI Innovation Partner</p>
                 <button class="launch-btn" onclick="window.location.href='#'">
                     Explore Our Services
                 </button>
@@ -650,7 +609,7 @@ class SoftWireApp {
         if (statusIndicator) {
             statusIndicator.innerHTML = `
                 <div class="status-dot" style="background: #4caf50;"></div>
-                <span class="status-text">Live Now!</span>
+                <span class="status-text">Online</span>
             `;
         }
     }
@@ -683,28 +642,121 @@ class SoftWireApp {
         document.removeEventListener('visibilitychange', this.handleVisibilityChange);
         document.removeEventListener('keydown', this.handleKeyboard);
     }
+
+    // Contact Form Handling
+    initializeContactForm() {
+        const form = document.getElementById('contactForm');
+        if (form) {
+            form.addEventListener('submit', this.handleContactSubmit.bind(this));
+        }
+    }
+    
+    async handleContactSubmit(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        const contactData = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            message: formData.get('message')
+        };
+        
+        const submitBtn = e.target.querySelector('.submit-btn');
+        const formMessage = document.getElementById('contactMessage');
+        
+        // Validate form data
+        if (!this.validateContactForm(contactData)) {
+            this.showContactMessage('Please fill in all required fields correctly.', 'error');
+            return;
+        }
+        
+        // Show loading state
+        submitBtn.classList.add('loading');
+        submitBtn.disabled = true;
+        
+        try {
+            // Simulate API call (replace with actual endpoint)
+            await this.submitContactForm(contactData);
+            
+            // Success
+            this.showContactMessage('Thank you! We\'ll get back to you soon.', 'success');
+            e.target.reset();
+            
+            // Store contact in localStorage for analytics
+            this.storeContactLocally(contactData);
+            
+        } catch (error) {
+            console.error('Contact form submission error:', error);
+            this.showContactMessage('Something went wrong. Please try again.', 'error');
+        } finally {
+            // Reset button state
+            submitBtn.classList.remove('loading');
+            submitBtn.disabled = false;
+        }
+    }
+    
+    validateContactForm(data) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^[\+]?[0-9\-\s\(\)]{10,}$/;
+        
+        return data.name && 
+               data.name.length >= 2 && 
+               emailRegex.test(data.email) && 
+               phoneRegex.test(data.phone) && 
+               data.message && 
+               data.message.length >= 10;
+    }
+    
+    async submitContactForm(contactData) {
+        // Simulate API call - replace with your actual contact service
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // Simulate 95% success rate
+                if (Math.random() > 0.05) {
+                    resolve({ success: true });
+                } else {
+                    reject(new Error('Network error'));
+                }
+            }, 2000);
+        });
+    }
+    
+    showContactMessage(message, type) {
+        const messageElement = document.getElementById('contactMessage');
+        if (messageElement) {
+            messageElement.textContent = message;
+            messageElement.className = `form-message ${type}`;
+            messageElement.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 5000);
+        }
+    }
+    
+    storeContactLocally(contactData) {
+        try {
+            const contacts = JSON.parse(localStorage.getItem('softwire-contacts') || '[]');
+            contacts.push({
+                ...contactData,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                referrer: document.referrer
+            });
+            localStorage.setItem('softwire-contacts', JSON.stringify(contacts));
+        } catch (error) {
+            console.warn('Could not store contact data locally:', error);
+        }
+    }
 }
 
+// Initialize the application
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
     window.softWireApp = new SoftWireApp();
 });
-
-// Add confetti animation keyframes
-const confettiStyle = document.createElement('style');
-confettiStyle.textContent = `
-    @keyframes confettiFall {
-        0% {
-            transform: translateY(0) rotate(0deg);
-            opacity: 1;
-        }
-        100% {
-            transform: translateY(100vh) rotate(360deg);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(confettiStyle);
 
 // Export for module usage
 if (typeof module !== 'undefined' && module.exports) {

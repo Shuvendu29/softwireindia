@@ -1,0 +1,48 @@
+# Firebase and deployment files
+firebase.json
+.firebaserc
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# Node modules and build files
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+.cache
+
+# Documentation (not needed in production)
+*.md
+!README.md
+
+# Backend files (not needed for frontend hosting)
+backend-api.js
+package-backend.json
+users.db
+
+# Development files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

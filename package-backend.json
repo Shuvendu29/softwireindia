@@ -1,0 +1,35 @@
+{
+  "name": "softwire-india-api",
+  "version": "1.0.0",
+  "description": "Authentication API for SoftWire India website",
+  "main": "backend-api.js",
+  "scripts": {
+    "start": "node backend-api.js",
+    "dev": "nodemon backend-api.js",
+    "install-backend": "npm install express bcryptjs jsonwebtoken nodemailer sqlite3 cors express-rate-limit"
+  },
+  "keywords": [
+    "authentication",
+    "nodejs",
+    "express",
+    "api",
+    "softwire-india"
+  ],
+  "author": "SoftWire India",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.7",
+    "sqlite3": "^5.1.6",
+    "cors": "^2.8.5",
+    "express-rate-limit": "^7.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

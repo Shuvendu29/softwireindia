@@ -1,0 +1,32 @@
+{
+  "lifecycle": {
+    "rule": [
+      {
+        "action": {"type": "SetStorageClass", "storageClass": "NEARLINE"},
+        "condition": {"age": 30},
+        "description": "Move files older than 30 days to Nearline storage"
+      },
+      {
+        "action": {"type": "SetStorageClass", "storageClass": "COLDLINE"},
+        "condition": {"age": 90},
+        "description": "Move files older than 90 days to Coldline storage"
+      },
+      {
+        "action": {"type": "Delete"},
+        "condition": {
+          "age": 365,
+          "matchesPrefix": ["logs/", "temp/", "cache/"]
+        },
+        "description": "Delete temporary files older than 365 days"
+      },
+      {
+        "action": {"type": "Delete"},
+        "condition": {
+          "age": 2555,
+          "matchesPrefix": ["firestore-backups/"]
+        },
+        "description": "Delete Firestore backups older than 7 years"
+      }
+    ]
+  }
+}

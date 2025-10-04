@@ -92,10 +92,10 @@ if exist "index.html" (
     exit /b 1
 )
 
-if exist "auth.html" (
-    echo ✅ auth.html found
+if exist "auth-simple.html" (
+    echo ✅ auth-simple.html found
 ) else (
-    echo ❌ auth.html not found
+    echo ❌ auth-simple.html not found
     pause
     exit /b 1
 )

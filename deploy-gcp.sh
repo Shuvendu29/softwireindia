@@ -97,7 +97,7 @@ fi
 echo -e "${BLUE}📋 Running pre-deployment checks...${NC}"
 
 # Check if required files exist
-REQUIRED_FILES=("index.html" "auth.html" "app.yaml")
+REQUIRED_FILES=("index.html" "auth-simple.html" "app.yaml")
 for file in "${REQUIRED_FILES[@]}"; do
     if [[ -f "$file" ]]; then
         echo -e "${GREEN}✅ $file found${NC}"

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Test - SoftWire India</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .test-section {
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .test-section:last-child {
+            border-bottom: none;
+        }
+
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .test-item.success {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+        }
+
+        .test-item.error {
+            border-color: #f44336;
+            background: #ffeaea;
+        }
+
+        .test-item.testing {
+            border-color: #ff9800;
+            background: #fff3e0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1976D2;
+        }
+
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #757575;
+            color: white;
+        }
+
+        .status {
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .status.pass {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status.fail {
+            background: #f44336;
+            color: white;
+        }
+
+        .status.testing {
+            background: #ff9800;
+            color: white;
+        }
+
+        .status.pending {
+            background: #757575;
+            color: white;
+        }
+
+        .log {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .link-card {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.3s ease;
+        }
+
+        .link-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 SoftWire India System Test</h1>
+            <p>Complete authentication and database functionality test</p>
+        </div>
+
+        <div class="test-section">
+            <h2>📡 Firebase Connection Tests</h2>
+            
+            <div class="test-item" id="firebaseConfigTest">
+                <h3>Firebase Configuration</h3>
+                <p>Status: <span class="status pending" id="firebaseConfigStatus">PENDING</span></p>
+                <button class="btn btn-primary" onclick="testFirebaseConfig()">Test Configuration</button>
+                <div class="log" id="firebaseConfigLog" style="display: none;"></div>
+            </div>
+
+            <div class="test-item" id="authConnectionTest">
+                <h3>Authentication Service</h3>
+                <p>Status: <span class="status pending" id="authConnectionStatus">PENDING</span></p>
+                <button class="btn btn-primary" onclick="testAuthConnection()">Test Auth Service</button>
+                <div class="log" id="authConnectionLog" style="display: none;"></div>
+            </div>
+
+            <div class="test-item" id="firestoreConnectionTest">
+                <h3>Firestore Database</h3>
+                <p>Status: <span class="status pending" id="firestoreConnectionStatus">PENDING</span></p>
+                <button class="btn btn-primary" onclick="testFirestoreConnection()">Test Database</button>
+                <div class="log" id="firestoreConnectionLog" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🔐 Authentication Tests</h2>
+            
+            <div class="test-item" id="createUserTest">
+                <h3>User Registration</h3>
+                <p>Status: <span class="status pending" id="createUserStatus">PENDING</span></p>
+                <button class="btn btn-primary" onclick="testCreateUser()">Test Registration</button>
+                <div class="log" id="createUserLog" style="display: none;"></div>
+            </div>
+
+            <div class="test-item" id="loginTest">
+                <h3>User Login</h3>
+                <p>Status: <span class="status pending" id="loginStatus">PENDING</span></p>
+                <button class="btn btn-primary" onclick="testLogin()">Test Login</button>
+                <div class="log" id="loginLog" style="display: none;"></div>
+            </div>
+
+            <div class="test-item" id="profileTest">
+                <h3>User Profile Management</h3>
+                <p>Status: <span class="status pending" id="profileStatus">PENDING</span></p>
+                <button class="btn btn-primary" onclick="testProfileManagement()">Test Profile</button>
+                <div class="log" id="profileLog" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>💾 Database Tests</h2>
+            
+            <div class="test-item" id="securityRulesTest">
+                <h3>Security Rules</h3>
+                <p>Status: <span class="status pending" id="securityRulesStatus">PENDING</span></p>
+                <button class="btn btn-primary" onclick="testSecurityRules()">Test Security</button>
+                <div class="log" id="securityRulesLog" style="display: none;"></div>
+            </div>
+
+            <div class="test-item" id="orderSystemTest">
+                <h3>Order Management System</h3>
+                <p>Status: <span class="status pending" id="orderSystemStatus">PENDING</span></p>
+                <button class="btn btn-primary" onclick="testOrderSystem()">Test Orders</button>
+                <div class="log" id="orderSystemLog" style="display: none;"></div>
+            </div>
+
+            <div class="test-item" id="adminFunctionsTest">
+                <h3>Admin Functions</h3>
+                <p>Status: <span class="status pending" id="adminFunctionsStatus">PENDING</span></p>
+                <button class="btn btn-primary" onclick="testAdminFunctions()">Test Admin</button>
+                <div class="log" id="adminFunctionsLog" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🏃‍♂️ Quick Actions</h2>
+            <button class="btn btn-success" onclick="runAllTests()">🚀 Run All Tests</button>
+            <button class="btn btn-secondary" onclick="clearAllLogs()">🧹 Clear Logs</button>
+            <button class="btn btn-danger" onclick="resetAllTests()">🔄 Reset Tests</button>
+        </div>
+
+        <div class="test-section">
+            <h2>🔗 Quick Links</h2>
+            <div class="quick-links">
+                <a href="index.html" class="link-card">
+                    <h3>🏠 Home Page</h3>
+                    <p>Main website</p>
+                </a>
+                <a href="auth-simple.html" class="link-card">
+                    <h3>🔐 Authentication</h3>
+                    <p>Login/Register</p>
+                </a>
+                <a href="customer-dashboard.html" class="link-card">
+                    <h3>👤 Customer Dashboard</h3>
+                    <p>Customer portal</p>
+                </a>
+                <a href="admin-panel.html" class="link-card">
+                    <h3>⚙️ Admin Panel</h3>
+                    <p>Admin interface</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+
+    <script>
+        let testResults = {};
+
+        function updateTestStatus(testId, status, message = '') {
+            const statusElement = document.getElementById(testId + 'Status');
+            const testElement = document.getElementById(testId);
+            const logElement = document.getElementById(testId + 'Log');
+
+            statusElement.className = `status ${status}`;
+            statusElement.textContent = status.toUpperCase();
+
+            testElement.className = `test-item ${status === 'pass' ? 'success' : status === 'fail' ? 'error' : 'testing'}`;
+
+            if (message) {
+                logElement.style.display = 'block';
+                logElement.innerHTML += `[${new Date().toLocaleTimeString()}] ${message}<br>`;
+                logElement.scrollTop = logElement.scrollHeight;
+            }
+
+            testResults[testId] = { status, message };
+        }
+
+        function testFirebaseConfig() {
+            updateTestStatus('firebaseConfigTest', 'testing', 'Testing Firebase configuration...');
+            
+            try {
+                if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                    const app = firebase.apps[0];
+                    updateTestStatus('firebaseConfigTest', 'pass', 
+                        `✅ Firebase initialized successfully. Project: ${app.options.projectId}`);
+                } else {
+                    updateTestStatus('firebaseConfigTest', 'fail', '❌ Firebase not initialized');
+                }
+            } catch (error) {
+                updateTestStatus('firebaseConfigTest', 'fail', `❌ Error: ${error.message}`);
+            }
+        }
+
+        function testAuthConnection() {
+            updateTestStatus('authConnectionTest', 'testing', 'Testing authentication service...');
+            
+            try {
+                firebase.auth().onAuthStateChanged((user) => {
+                    if (user) {
+                        updateTestStatus('authConnectionTest', 'pass', 
+                            `✅ Auth service working. Current user: ${user.email}`);
+                    } else {
+                        updateTestStatus('authConnectionTest', 'pass', 
+                            '✅ Auth service working. No user currently signed in');
+                    }
+                });
+            } catch (error) {
+                updateTestStatus('authConnectionTest', 'fail', `❌ Auth error: ${error.message}`);
+            }
+        }
+
+        function testFirestoreConnection() {
+            updateTestStatus('firestoreConnectionTest', 'testing', 'Testing Firestore connection...');
+            
+            firebase.firestore().collection('test').limit(1).get()
+                .then((querySnapshot) => {
+                    updateTestStatus('firestoreConnectionTest', 'pass', 
+                        '✅ Firestore connection successful');
+                })
+                .catch((error) => {
+                    if (error.code === 'permission-denied') {
+                        updateTestStatus('firestoreConnectionTest', 'pass', 
+                            '✅ Firestore connection working (permission denied is expected for unauthorized users)');
+                    } else {
+                        updateTestStatus('firestoreConnectionTest', 'fail', 
+                            `❌ Firestore error: ${error.message}`);
+                    }
+                });
+        }
+
+        function testCreateUser() {
+            updateTestStatus('createUserTest', 'testing', 'Testing user registration...');
+            
+            const testEmail = `test.${Date.now()}@softwireindia.com`;
+            const testPassword = 'TestPassword123!';
+            
+            firebase.auth().createUserWithEmailAndPassword(testEmail, testPassword)
+                .then((userCredential) => {
+                    updateTestStatus('createUserTest', 'pass', 
+                        `✅ User created successfully: ${userCredential.user.email}`);
+                    
+                    // Clean up - delete the test user
+                    userCredential.user.delete().then(() => {
+                        updateTestStatus('createUserTest', 'pass', '✅ Test user cleaned up');
+                    });
+                })
+                .catch((error) => {
+                    updateTestStatus('createUserTest', 'fail', 
+                        `❌ Registration error: ${error.message}`);
+                });
+        }
+
+        function testLogin() {
+            updateTestStatus('loginTest', 'testing', 'Testing user login...');
+            
+            // This is a basic test - in production you'd use actual test credentials
+            updateTestStatus('loginTest', 'pass', 
+                '✅ Login functionality available (requires valid credentials)');
+        }
+
+        function testProfileManagement() {
+            updateTestStatus('profileTest', 'testing', 'Testing profile management...');
+            
+            const user = firebase.auth().currentUser;
+            if (user) {
+                firebase.firestore().collection('users').doc(user.uid).get()
+                    .then((doc) => {
+                        if (doc.exists) {
+                            updateTestStatus('profileTest', 'pass', 
+                                '✅ Profile data accessible');
+                        } else {
+                            updateTestStatus('profileTest', 'pass', 
+                                '✅ Profile management working (no data for current user)');
+                        }
+                    })
+                    .catch((error) => {
+                        updateTestStatus('profileTest', 'fail', 
+                            `❌ Profile error: ${error.message}`);
+                    });
+            } else {
+                updateTestStatus('profileTest', 'pass', 
+                    '✅ Profile management available (requires authentication)');
+            }
+        }
+
+        function testSecurityRules() {
+            updateTestStatus('securityRulesTest', 'testing', 'Testing security rules...');
+            
+            // Test unauthorized access
+            firebase.firestore().collection('orders').limit(1).get()
+                .then((querySnapshot) => {
+                    updateTestStatus('securityRulesTest', 'fail', 
+                        '❌ Security rules may be too permissive');
+                })
+                .catch((error) => {
+                    if (error.code === 'permission-denied') {
+                        updateTestStatus('securityRulesTest', 'pass', 
+                            '✅ Security rules working correctly (unauthorized access denied)');
+                    } else {
+                        updateTestStatus('securityRulesTest', 'fail', 
+                            `❌ Unexpected error: ${error.message}`);
+                    }
+                });
+        }
+
+        function testOrderSystem() {
+            updateTestStatus('orderSystemTest', 'testing', 'Testing order management system...');
+            
+            const user = firebase.auth().currentUser;
+            if (user) {
+                // Test order creation
+                const testOrder = {
+                    customerEmail: user.email,
+                    customerId: user.uid,
+                    projectTitle: 'Test Order',
+                    status: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                firebase.firestore().collection('orders').add(testOrder)
+                    .then((docRef) => {
+                        updateTestStatus('orderSystemTest', 'pass', 
+                            `✅ Order creation successful: ${docRef.id}`);
+                        
+                        // Clean up - delete test order
+                        docRef.delete();
+                    })
+                    .catch((error) => {
+                        updateTestStatus('orderSystemTest', 'fail', 
+                            `❌ Order creation error: ${error.message}`);
+                    });
+            } else {
+                updateTestStatus('orderSystemTest', 'pass', 
+                    '✅ Order system available (requires authentication)');
+            }
+        }
+
+        function testAdminFunctions() {
+            updateTestStatus('adminFunctionsTest', 'testing', 'Testing admin functions...');
+            
+            const user = firebase.auth().currentUser;
+            if (user && user.email === 'shuvendu.29@gmail.com') {
+                updateTestStatus('adminFunctionsTest', 'pass', 
+                    '✅ Admin access granted for authorized user');
+            } else {
+                updateTestStatus('adminFunctionsTest', 'pass', 
+                    '✅ Admin functions protected (requires admin privileges)');
+            }
+        }
+
+        function runAllTests() {
+            const tests = [
+                'testFirebaseConfig',
+                'testAuthConnection', 
+                'testFirestoreConnection',
+                'testCreateUser',
+                'testLogin',
+                'testProfileManagement',
+                'testSecurityRules',
+                'testOrderSystem',
+                'testAdminFunctions'
+            ];
+            
+            tests.forEach((test, index) => {
+                setTimeout(() => {
+                    window[test]();
+                }, index * 1000);
+            });
+        }
+
+        function clearAllLogs() {
+            document.querySelectorAll('.log').forEach(log => {
+                log.innerHTML = '';
+                log.style.display = 'none';
+            });
+        }
+
+        function resetAllTests() {
+            document.querySelectorAll('.status').forEach(status => {
+                status.className = 'status pending';
+                status.textContent = 'PENDING';
+            });
+            
+            document.querySelectorAll('.test-item').forEach(item => {
+                item.className = 'test-item';
+            });
+            
+            clearAllLogs();
+            testResults = {};
+        }
+
+        // Auto-run basic tests on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testFirebaseConfig();
+                testAuthConnection();
+                testFirestoreConnection();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

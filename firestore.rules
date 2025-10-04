@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // User profiles - only accessible by the authenticated user
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Customer orders - only accessible by the customer who created them or admins
+    match /orders/{orderId} {
+      allow read, write: if request.auth != null && (
+        request.auth.uid == resource.data.customerId ||
+        request.auth.token.admin == true
+      );
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.customerId;
+    }
+    
+    // Services catalog - readable by authenticated users, writable by admins only
+    match /services/{serviceId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+    
+    // Order status updates - only admins can update status
+    match /orderUpdates/{updateId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == resource.data.customerId ||
+        request.auth.token.admin == true
+      );
+      allow create, update: if request.auth != null && request.auth.token.admin == true;
+    }
+    
+    // Customer messages/requirements - accessible by customer and admins
+    match /customerRequirements/{requirementId} {
+      allow read, write: if request.auth != null && (
+        request.auth.uid == resource.data.customerId ||
+        request.auth.token.admin == true
+      );
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.customerId;
+    }
+    
+    // Contact form submissions - readable by admins only
+    match /contactSubmissions/{submissionId} {
+      allow read, write: if request.auth != null && request.auth.token.admin == true;
+      allow create: if true; // Anyone can submit contact forms
+    }
+    
+    // Admin logs - only admins can access
+    match /adminLogs/{logId} {
+      allow read, write: if request.auth != null && request.auth.token.admin == true;
+    }
+  }
+}

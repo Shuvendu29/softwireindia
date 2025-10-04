@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification - SoftWire India</title>
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .verification-container {
+            background: #ffffff;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            margin: 2rem;
+            text-align: center;
+        }
+        
+        .logo {
+            color: #667eea;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .verification-status {
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+        
+        .verification-status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .verification-status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .verification-status.loading {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #0c5460;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background: #5a67d8;
+        }
+        
+        .btn.secondary {
+            background: #6c757d;
+        }
+        
+        .btn.secondary:hover {
+            background: #5a6268;
+        }
+        
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .success .icon {
+            color: #28a745;
+        }
+        
+        .error .icon {
+            color: #dc3545;
+        }
+        
+        .loading .icon {
+            color: #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="verification-container">
+        <div class="logo">SoftWire India</div>
+        
+        <div id="verificationStatus" class="verification-status loading">
+            <div class="icon">⏳</div>
+            <h2>Verifying Your Email...</h2>
+            <p><span class="spinner"></span>Please wait while we verify your email address.</p>
+        </div>
+        
+        <div id="actionButtons" style="display: none;">
+            <a href="auth-simple.html" class="btn">Go to Login</a>
+            <a href="index.html" class="btn secondary">Back to Home</a>
+        </div>
+    </div>
+    
+    <script>
+        // Get token from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        async function verifyEmail() {
+            const statusDiv = document.getElementById('verificationStatus');
+            const buttonsDiv = document.getElementById('actionButtons');
+            
+            if (!token) {
+                statusDiv.className = 'verification-status error';
+                statusDiv.innerHTML = `
+                    <div class="icon">❌</div>
+                    <h2>Invalid Verification Link</h2>
+                    <p>The verification link is invalid or incomplete. Please check your email for the correct link.</p>
+                `;
+                buttonsDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                // For custom API backend
+                const response = await fetch(`http://localhost:3000/api/verify-email?token=${token}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    statusDiv.className = 'verification-status success';
+                    statusDiv.innerHTML = `
+                        <div class="icon">✅</div>
+                        <h2>Email Verified Successfully!</h2>
+                        <p>${result.message}</p>
+                        <p>You can now log in to your account.</p>
+                    `;
+                } else {
+                    statusDiv.className = 'verification-status error';
+                    statusDiv.innerHTML = `
+                        <div class="icon">❌</div>
+                        <h2>Verification Failed</h2>
+                        <p>${result.message}</p>
+                        <p>Please try registering again or contact support.</p>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Verification error:', error);
+                statusDiv.className = 'verification-status error';
+                statusDiv.innerHTML = `
+                    <div class="icon">❌</div>
+                    <h2>Verification Error</h2>
+                    <p>Unable to verify your email at this time. Please try again later.</p>
+                    <p>If the problem persists, please contact support.</p>
+                `;
+            }
+            
+            buttonsDiv.style.display = 'block';
+        }
+        
+        // Start verification when page loads
+        document.addEventListener('DOMContentLoaded', verifyEmail);
+    </script>
+</body>
+</html>

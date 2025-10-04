@@ -46,17 +46,19 @@ deploy-gcp.bat
 
 ```
 softwireindia/
-├── index.html              # Main HTML file
+├── index.html              # Main landing page
+├── auth-simple.html        # Clean authentication page (login/register)
 ├── css/
-│   └── style.css           # Main stylesheet with animations
+│   └── style.css           # Complete stylesheet with animations
 ├── js/
 │   ├── main.js             # Core application logic
 │   ├── particles.js        # Particle system and effects
-│   └── animations.js       # Animation utilities
-├── images/                 # Image assets
-├── .github/
-│   └── copilot-instructions.md
-└── README.md
+│   └── animations.js       # Typing animation utilities
+├── images/                 # Favicon and image assets
+├── app.yaml               # Google Cloud Platform deployment
+├── render.yaml            # Render.com deployment config
+├── package.json           # Project dependencies
+└── README.md              # Documentation
 ```
 
 ## 🛠️ Technology Stack
@@ -107,7 +109,7 @@ softwireindia/
    git init
    git add .
    git commit -m "Initial commit"
-   git remote add origin https://github.com/yourusername/softwireindia.git
+   git remote add origin https://github.com/Shuvendu29/softwireindia.git
    git push -u origin main
    ```
 

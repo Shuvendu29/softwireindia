@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoftWire India - Authentication</title>
+    <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+    
+    <!-- Firebase SDK v9 (Modular) -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics-compat.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .auth-container {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            margin: 2rem;
+        }
+
+        .auth-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .auth-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .auth-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .social-login {
+            margin-bottom: 20px;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 12px;
+            background: #db4437;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-google:hover {
+            background: #c23321;
+        }
+
+        .btn-phone {
+            width: 100%;
+            padding: 12px;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-phone:hover {
+            background: #128C7E;
+        }
+
+        .btn-back {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .btn-back:hover {
+            background: #5a6268;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 10px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            color: #666;
+            position: relative;
+        }
+
+        .phone-login-form,
+        .phone-register-form {
+            display: none;
+        }
+
+        .back-button {
+            margin-bottom: 20px;
+        }
+
+        small {
+            color: #666;
+            font-size: 12px;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .auth-message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .field-feedback {
+            font-size: 12px;
+            margin-top: 5px;
+            padding: 5px 0;
+        }
+
+        .field-feedback.success {
+            color: #28a745;
+        }
+
+        .field-feedback.error {
+            color: #dc3545;
+        }
+
+        input.error {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+        }
+
+        input.success {
+            border-color: #28a745 !important;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        button.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            color: #667eea;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background: #5a67d8;
+        }
+        
+        .form-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .form-switch a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .form-switch a:hover {
+            text-decoration: underline;
+        }
+        
+        .form-container {
+            display: none;
+        }
+        
+        .form-container.active {
+            display: block;
+        }
+        
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            background: rgba(0,0,0,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">← Back to Home</a>
+    
+    <div class="auth-container">
+        <div class="header">
+            <div class="logo">SoftWire India</div>
+            <div class="subtitle">Digital Solutions & Development</div>
+        </div>
+        
+        <!-- Message Display -->
+        <div id="authMessage" class="auth-message"></div>
+        
+        <!-- Login Form -->
+        <div class="form-container login-form active">
+            <!-- Social Login Options -->
+            <div class="social-login">
+                <button type="button" class="btn-google" onclick="handleGoogleLogin()">
+                    🔍 Continue with Google
+                </button>
+                <button type="button" class="btn-phone" onclick="showPhoneLogin()">
+                    📱 Continue with Phone
+                </button>
+            </div>
+            
+            <div class="divider">
+                <span>OR</span>
+            </div>
+            
+            <!-- Email Login -->
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn">Sign In with Email</button>
+            </form>
+            <div class="form-switch">
+                <p>Don't have an account? <a href="#" onclick="showRegister()">Sign up</a></p>
+            </div>
+        </div>
+        
+        <!-- Phone Login Form -->
+        <div class="form-container phone-login-form">
+            <div class="back-button">
+                <button type="button" onclick="showLogin()" class="btn-back">← Back to Login</button>
+            </div>
+            <h3>Phone Authentication</h3>
+            <form id="phoneLoginForm">
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" placeholder="+1234567890" required>
+                    <small>Include country code (e.g., +91 for India)</small>
+                </div>
+                <button type="submit" class="btn">Send OTP</button>
+            </form>
+            
+            <!-- OTP Verification -->
+            <div id="otpSection" style="display: none;">
+                <div class="form-group">
+                    <label for="otpCode">Enter OTP</label>
+                    <input type="text" id="otpCode" placeholder="123456" maxlength="6" required>
+                </div>
+                <button type="button" onclick="verifyOTP()" class="btn">Verify OTP</button>
+                <button type="button" onclick="resendOTP()" class="btn-secondary">Resend OTP</button>
+            </div>
+            
+            <!-- Invisible reCAPTCHA container -->
+            <div id="recaptcha-container"></div>
+        </div>
+        
+        <!-- Register Form -->
+        <div class="form-container register-form">
+            <!-- Social Registration Options -->
+            <div class="social-login">
+                <button type="button" class="btn-google" onclick="handleGoogleLogin()">
+                    🔍 Sign up with Google
+                </button>
+                <button type="button" class="btn-phone" onclick="showPhoneRegister()">
+                    📱 Sign up with Phone
+                </button>
+            </div>
+            
+            <div class="divider">
+                <span>OR</span>
+            </div>
+            
+            <!-- Email Registration -->
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email Address</label>
+                    <input type="email" id="registerEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input type="password" id="registerPassword" required>
+                </div>
+                <button type="submit" class="btn">Create Account with Email</button>
+            </form>
+            <div class="form-switch">
+                <p>Already have an account? <a href="#" onclick="showLogin()">Sign in</a></p>
+            </div>
+        </div>
+        
+        <!-- Phone Registration Form -->
+        <div class="form-container phone-register-form">
+            <div class="back-button">
+                <button type="button" onclick="showRegister()" class="btn-back">← Back to Registration</button>
+            </div>
+            <h3>Phone Registration</h3>
+            <form id="phoneRegisterForm">
+                <div class="form-group">
+                    <label for="regFirstName">First Name</label>
+                    <input type="text" id="regFirstName" required>
+                </div>
+                <div class="form-group">
+                    <label for="regLastName">Last Name</label>
+                    <input type="text" id="regLastName" required>
+                </div>
+                <div class="form-group">
+                    <label for="regPhoneNumber">Phone Number</label>
+                    <input type="tel" id="regPhoneNumber" placeholder="+1234567890" required>
+                    <small>Include country code (e.g., +91 for India)</small>
+                </div>
+                <button type="submit" class="btn">Send OTP</button>
+            </form>
+            
+            <!-- OTP Verification for Registration -->
+            <div id="regOtpSection" style="display: none;">
+                <div class="form-group">
+                    <label for="regOtpCode">Enter OTP</label>
+                    <input type="text" id="regOtpCode" placeholder="123456" maxlength="6" required>
+                </div>
+                <button type="button" onclick="verifyRegistrationOTP()" class="btn">Verify and Create Account</button>
+                <button type="button" onclick="resendRegistrationOTP()" class="btn-secondary">Resend OTP</button>
+            </div>
+            
+            <!-- Invisible reCAPTCHA container for registration -->
+            <div id="recaptcha-container-reg"></div>
+        </div>
+    </div>
+    
+    <!-- Firebase Configuration -->
+    <script src="js/firebase-config.js?v=20251004180000"></script>
+    
+    <!-- Include the enhanced multi-authentication system -->
+    <script src="js/enhanced-auth-manager.js?v=20251004180000"></script>
+    
+    <!-- Debug Script -->
+    <script>
+        // Debug Firebase loading
+        window.addEventListener('load', function() {
+            console.log('🔍 Debugging Firebase loading...');
+            console.log('Firebase available:', typeof firebase !== 'undefined');
+            console.log('Firebase Auth available:', typeof firebase !== 'undefined' && firebase.auth);
+            console.log('Firebase Firestore available:', typeof firebase !== 'undefined' && firebase.firestore);
+            console.log('Firebase window objects:', {
+                firebaseAuth: window.firebaseAuth,
+                firebaseDB: window.firebaseDB
+            });
+        });
+    </script>
+    
+    <script>
+        function showLogin() {
+            document.querySelectorAll('.form-container').forEach(form => {
+                form.classList.remove('active');
+                form.style.display = 'none';
+            });
+            document.querySelector('.login-form').classList.add('active');
+            document.querySelector('.login-form').style.display = 'block';
+        }
+        
+        function showRegister() {
+            document.querySelectorAll('.form-container').forEach(form => {
+                form.classList.remove('active');
+                form.style.display = 'none';
+            });
+            document.querySelector('.register-form').classList.add('active');
+            document.querySelector('.register-form').style.display = 'block';
+        }
+        
+        function showPhoneLogin() {
+            document.querySelectorAll('.form-container').forEach(form => {
+                form.classList.remove('active');
+                form.style.display = 'none';
+            });
+            document.querySelector('.phone-login-form').style.display = 'block';
+        }
+        
+        function showPhoneRegister() {
+            document.querySelectorAll('.form-container').forEach(form => {
+                form.classList.remove('active');
+                form.style.display = 'none';
+            });
+            document.querySelector('.phone-register-form').style.display = 'block';
+        }
+        
+        // Handle URL hash
+        if (window.location.hash === '#register') {
+            showRegister();
+        } else {
+            showLogin();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Test - SoftWire India</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover { background: #0056b3; }
+        .form-group {
+            margin: 15px 0;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Registration Test</h1>
+        <p>This page tests the Firebase registration functionality</p>
+        
+        <div id="testResults"></div>
+        
+        <h3>Test Registration</h3>
+        <div class="form-group">
+            <label>First Name:</label>
+            <input type="text" id="testFirstName" value="Test">
+        </div>
+        <div class="form-group">
+            <label>Last Name:</label>
+            <input type="text" id="testLastName" value="User">
+        </div>
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="testEmail" value="">
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" id="testPassword" value="TestPass123!">
+        </div>
+        
+        <button class="btn" onclick="runConnectionTest()">Test Firebase Connection</button>
+        <button class="btn" onclick="runRegistrationTest()">Test Registration</button>
+        <button class="btn" onclick="clearResults()">Clear Results</button>
+        
+        <h3>Quick Links</h3>
+        <a href="auth-simple.html" class="btn">Go to Login/Register</a>
+        <a href="system-test.html" class="btn">Full System Test</a>
+        <a href="index.html" class="btn">Home Page</a>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js?v=20251004170000"></script>
+
+    <script>
+        function addResult(message, type = 'info') {
+            const resultsDiv = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${type}`;
+            resultDiv.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            resultsDiv.appendChild(resultDiv);
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        function clearResults() {
+            document.getElementById('testResults').innerHTML = '';
+        }
+
+        function runConnectionTest() {
+            addResult('🔍 Testing Firebase connection...');
+            
+            // Generate random email for testing
+            const randomEmail = `test.${Date.now()}@softwireindia.com`;
+            document.getElementById('testEmail').value = randomEmail;
+            
+            setTimeout(() => {
+                if (typeof firebase === 'undefined') {
+                    addResult('❌ Firebase SDK not loaded', 'error');
+                    return;
+                }
+                
+                if (!window.firebaseAuth) {
+                    addResult('❌ Firebase Auth not initialized', 'error');
+                    return;
+                }
+                
+                if (!window.firebaseDB) {
+                    addResult('❌ Firebase Firestore not initialized', 'error');
+                    return;
+                }
+                
+                addResult('✅ Firebase connection successful', 'success');
+                addResult('✅ Firebase Auth available', 'success');
+                addResult('✅ Firebase Firestore available', 'success');
+                addResult(`📧 Test email generated: ${randomEmail}`, 'info');
+            }, 1000);
+        }
+
+        async function runRegistrationTest() {
+            const firstName = document.getElementById('testFirstName').value;
+            const lastName = document.getElementById('testLastName').value;
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+            
+            if (!email) {
+                addResult('❌ Please run connection test first to generate test email', 'error');
+                return;
+            }
+            
+            addResult('🚀 Starting registration test...');
+            addResult(`📧 Email: ${email}`, 'info');
+            
+            try {
+                // Test Firebase registration
+                addResult('📝 Creating user account...', 'info');
+                const userCredential = await window.firebaseAuth.createUserWithEmailAndPassword(email, password);
+                addResult('✅ Firebase user account created successfully', 'success');
+                
+                // Update profile
+                addResult('👤 Updating user profile...', 'info');
+                await userCredential.user.updateProfile({
+                    displayName: `${firstName} ${lastName}`
+                });
+                addResult('✅ User profile updated', 'success');
+                
+                // Save to Firestore
+                addResult('💾 Saving to Firestore...', 'info');
+                await window.firebaseDB.collection('users').doc(userCredential.user.uid).set({
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    emailVerified: false,
+                    loginCount: 0,
+                    lastLogin: null,
+                    profileCompleted: false
+                });
+                addResult('✅ User data saved to Firestore', 'success');
+                
+                // Send verification email
+                addResult('📨 Sending verification email...', 'info');
+                await userCredential.user.sendEmailVerification({
+                    url: `${window.location.origin}/auth-simple.html?verified=true`,
+                    handleCodeInApp: false
+                });
+                addResult('✅ Verification email sent', 'success');
+                
+                addResult('🎉 REGISTRATION TEST COMPLETED SUCCESSFULLY! 🎉', 'success');
+                addResult('📧 Check your email for verification link', 'info');
+                
+                // Clean up - delete the test user
+                setTimeout(async () => {
+                    try {
+                        await userCredential.user.delete();
+                        await window.firebaseDB.collection('users').doc(userCredential.user.uid).delete();
+                        addResult('🧹 Test user cleaned up', 'info');
+                    } catch (error) {
+                        console.log('Cleanup error (expected):', error);
+                    }
+                }, 5000);
+                
+            } catch (error) {
+                addResult(`❌ Registration failed: ${error.message}`, 'error');
+                console.error('Registration test error:', error);
+                
+                // Provide specific error guidance
+                if (error.code === 'auth/email-already-in-use') {
+                    addResult('💡 Try running connection test again to generate a new email', 'info');
+                } else if (error.code === 'auth/weak-password') {
+                    addResult('💡 Password is too weak, try a stronger password', 'info');
+                } else if (error.code === 'auth/invalid-email') {
+                    addResult('💡 Email format is invalid', 'info');
+                }
+            }
+        }
+
+        // Auto-run connection test on load
+        window.addEventListener('load', () => {
+            setTimeout(runConnectionTest, 1000);
+        });
+    </script>
+</body>
+</html>
