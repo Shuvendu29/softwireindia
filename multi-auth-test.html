@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Authentication Test - SoftWire India</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+        }
+        
+        .test-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #f9f9f9;
+        }
+        
+        .test-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .warning { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        
+        .btn:hover { background: #0056b3; }
+        
+        .btn-google {
+            background: #db4437;
+            color: white;
+        }
+        
+        .btn-google:hover { background: #c23321; }
+        
+        .btn-phone {
+            background: #25D366;
+            color: white;
+        }
+        
+        .btn-phone:hover { background: #128C7E; }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover { background: #5a6268; }
+        
+        .form-group {
+            margin: 15px 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .auth-method {
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: white;
+        }
+        
+        .auth-method h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-green { background: #28a745; }
+        .status-red { background: #dc3545; }
+        .status-yellow { background: #ffc107; }
+        .status-gray { background: #6c757d; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="header">
+            <h1>🔐 Multi-Authentication System Test</h1>
+            <p>Testing Google OAuth, Phone OTP, and Email/Password authentication</p>
+        </div>
+
+        <div id="testResults"></div>
+
+        <div class="test-section">
+            <h2>🧪 Firebase Connection Status</h2>
+            <div id="connectionStatus">
+                <div><span class="status-indicator status-gray"></span>Firebase SDK: <span id="firebaseStatus">Checking...</span></div>
+                <div><span class="status-indicator status-gray"></span>Authentication: <span id="authStatus">Checking...</span></div>
+                <div><span class="status-indicator status-gray"></span>Firestore: <span id="firestoreStatus">Checking...</span></div>
+                <div><span class="status-indicator status-gray"></span>Enhanced Auth Manager: <span id="enhancedAuthStatus">Checking...</span></div>
+            </div>
+            <button class="btn" onclick="testFirebaseConnection()">🔄 Test Connection</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📱 Authentication Methods Test</h2>
+            <div class="test-grid">
+                <!-- Email Authentication Test -->
+                <div class="auth-method">
+                    <h3>📧 Email Authentication</h3>
+                    <div class="form-group">
+                        <label>Test Email:</label>
+                        <input type="email" id="testEmail" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>Password:</label>
+                        <input type="password" id="testPassword" value="TestPass123!">
+                    </div>
+                    <button class="btn" onclick="testEmailRegistration()">Register</button>
+                    <button class="btn btn-secondary" onclick="testEmailLogin()">Login</button>
+                    <div id="emailTestResult"></div>
+                </div>
+
+                <!-- Google Authentication Test -->
+                <div class="auth-method">
+                    <h3>🔍 Google OAuth</h3>
+                    <p>Test Google authentication flow</p>
+                    <button class="btn btn-google" onclick="testGoogleAuth()">🔍 Test Google Login</button>
+                    <div id="googleTestResult"></div>
+                </div>
+
+                <!-- Phone Authentication Test -->
+                <div class="auth-method">
+                    <h3>📱 Phone Authentication</h3>
+                    <div class="form-group">
+                        <label>Phone Number:</label>
+                        <input type="tel" id="testPhone" placeholder="+1234567890">
+                        <small>Include country code</small>
+                    </div>
+                    <button class="btn btn-phone" onclick="testPhoneAuth()">📱 Send OTP</button>
+                    
+                    <div id="otpSection" style="display: none; margin-top: 15px;">
+                        <div class="form-group">
+                            <label>Enter OTP:</label>
+                            <input type="text" id="testOtp" maxlength="6" placeholder="123456">
+                        </div>
+                        <button class="btn" onclick="verifyTestOTP()">Verify OTP</button>
+                    </div>
+                    
+                    <div id="phoneTestResult"></div>
+                    <!-- Hidden reCAPTCHA container -->
+                    <div id="test-recaptcha-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎯 Quick Actions</h2>
+            <button class="btn" onclick="runAllTests()">🚀 Run All Tests</button>
+            <button class="btn btn-secondary" onclick="clearAllResults()">🧹 Clear Results</button>
+            <button class="btn btn-secondary" onclick="logoutCurrentUser()">🚪 Logout</button>
+        </div>
+
+        <div class="test-section">
+            <h2>🔗 Navigation</h2>
+            <a href="auth-simple.html" class="btn">🔐 Go to Authentication</a>
+            <a href="customer-dashboard.html" class="btn">👤 Customer Dashboard</a>
+            <a href="admin-panel.html" class="btn">⚙️ Admin Panel</a>
+            <a href="system-test.html" class="btn">🧪 System Test</a>
+            <a href="index.html" class="btn">🏠 Home</a>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js?v=20251004180000"></script>
+
+    <script>
+        let testConfirmationResult = null;
+        let testRecaptchaVerifier = null;
+
+        function addTestResult(section, message, type = 'info') {
+            const targetDiv = document.getElementById(section);
+            if (targetDiv) {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `test-result ${type}`;
+                resultDiv.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+                targetDiv.appendChild(resultDiv);
+                targetDiv.scrollTop = targetDiv.scrollHeight;
+            }
+        }
+
+        function updateConnectionStatus(service, status, indicator) {
+            const statusElement = document.getElementById(service);
+            const indicatorElement = statusElement.previousElementSibling;
+            
+            statusElement.textContent = status;
+            indicatorElement.className = `status-indicator ${indicator}`;
+        }
+
+        function testFirebaseConnection() {
+            addTestResult('testResults', '🔍 Testing Firebase connections...', 'info');
+            
+            // Generate test email
+            const testEmail = `test.${Date.now()}@softwireindia.com`;
+            document.getElementById('testEmail').value = testEmail;
+            
+            setTimeout(() => {
+                // Test Firebase SDK
+                if (typeof firebase === 'undefined') {
+                    updateConnectionStatus('firebaseStatus', 'Not loaded', 'status-red');
+                    addTestResult('testResults', '❌ Firebase SDK not loaded', 'error');
+                    return;
+                } else {
+                    updateConnectionStatus('firebaseStatus', 'Loaded', 'status-green');
+                }
+
+                // Test Firebase Auth
+                if (!window.firebaseAuth) {
+                    updateConnectionStatus('authStatus', 'Not available', 'status-red');
+                    addTestResult('testResults', '❌ Firebase Auth not available', 'error');
+                } else {
+                    updateConnectionStatus('authStatus', 'Available', 'status-green');
+                }
+
+                // Test Firestore
+                if (!window.firebaseDB) {
+                    updateConnectionStatus('firestoreStatus', 'Not available', 'status-red');
+                    addTestResult('testResults', '❌ Firestore not available', 'error');
+                } else {
+                    updateConnectionStatus('firestoreStatus', 'Available', 'status-green');
+                }
+
+                // Test Enhanced Auth Manager
+                if (!window.enhancedAuthManager) {
+                    updateConnectionStatus('enhancedAuthStatus', 'Not loaded', 'status-red');
+                    addTestResult('testResults', '❌ Enhanced Auth Manager not loaded', 'error');
+                } else {
+                    updateConnectionStatus('enhancedAuthStatus', 'Loaded', 'status-green');
+                }
+
+                // Setup test reCAPTCHA
+                if (window.firebaseAuth && !testRecaptchaVerifier) {
+                    try {
+                        testRecaptchaVerifier = new firebase.auth.RecaptchaVerifier('test-recaptcha-container', {
+                            'size': 'invisible',
+                            'callback': (response) => {
+                                addTestResult('phoneTestResult', '✅ reCAPTCHA verified', 'success');
+                            }
+                        });
+                        addTestResult('testResults', '✅ reCAPTCHA verifier initialized', 'success');
+                    } catch (error) {
+                        addTestResult('testResults', `⚠️ reCAPTCHA setup warning: ${error.message}`, 'warning');
+                    }
+                }
+
+                addTestResult('testResults', '✅ Firebase connection test completed', 'success');
+            }, 1000);
+        }
+
+        async function testEmailRegistration() {
+            const email = document.getElementById('testEmail').value;
+            const password = document.getElementById('testPassword').value;
+
+            if (!email) {
+                addTestResult('emailTestResult', '❌ Please run connection test first', 'error');
+                return;
+            }
+
+            addTestResult('emailTestResult', '📝 Testing email registration...', 'info');
+
+            try {
+                const userCredential = await window.firebaseAuth.createUserWithEmailAndPassword(email, password);
+                addTestResult('emailTestResult', '✅ Email registration successful', 'success');
+                
+                // Send verification email
+                await userCredential.user.sendEmailVerification();
+                addTestResult('emailTestResult', '📧 Verification email sent', 'success');
+                
+                // Clean up test user after delay
+                setTimeout(async () => {
+                    try {
+                        await userCredential.user.delete();
+                        addTestResult('emailTestResult', '🧹 Test user cleaned up', 'info');
+                    } catch (error) {
+                        console.log('Cleanup error (expected):', error);
+                    }
+                }, 3000);
+
+            } catch (error) {
+                addTestResult('emailTestResult', `❌ Registration failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testEmailLogin() {
+            addTestResult('emailTestResult', '🔑 Email login requires existing verified account', 'info');
+        }
+
+        async function testGoogleAuth() {
+            if (!window.firebaseAuth) {
+                addTestResult('googleTestResult', '❌ Firebase Auth not available', 'error');
+                return;
+            }
+
+            addTestResult('googleTestResult', '🔍 Testing Google authentication...', 'info');
+
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                provider.addScope('email');
+                provider.addScope('profile');
+                
+                addTestResult('googleTestResult', '🚀 Opening Google authentication popup...', 'info');
+                const result = await window.firebaseAuth.signInWithPopup(provider);
+                
+                addTestResult('googleTestResult', `✅ Google authentication successful: ${result.user.email}`, 'success');
+                addTestResult('googleTestResult', `👤 Display Name: ${result.user.displayName}`, 'info');
+                
+                // Logout after test
+                setTimeout(async () => {
+                    await window.firebaseAuth.signOut();
+                    addTestResult('googleTestResult', '🚪 Logged out after test', 'info');
+                }, 3000);
+
+            } catch (error) {
+                if (error.code === 'auth/popup-closed-by-user') {
+                    addTestResult('googleTestResult', '⚠️ Google authentication cancelled by user', 'warning');
+                } else {
+                    addTestResult('googleTestResult', `❌ Google authentication failed: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function testPhoneAuth() {
+            const phoneNumber = document.getElementById('testPhone').value;
+
+            if (!phoneNumber) {
+                addTestResult('phoneTestResult', '❌ Please enter a phone number', 'error');
+                return;
+            }
+
+            if (!testRecaptchaVerifier) {
+                addTestResult('phoneTestResult', '❌ reCAPTCHA not initialized. Run connection test first.', 'error');
+                return;
+            }
+
+            const phoneRegex = /^\+\d{10,15}$/;
+            if (!phoneRegex.test(phoneNumber)) {
+                addTestResult('phoneTestResult', '❌ Invalid phone number format. Use +countrycode+number', 'error');
+                return;
+            }
+
+            addTestResult('phoneTestResult', '📱 Sending OTP...', 'info');
+
+            try {
+                testConfirmationResult = await window.firebaseAuth.signInWithPhoneNumber(phoneNumber, testRecaptchaVerifier);
+                
+                document.getElementById('otpSection').style.display = 'block';
+                addTestResult('phoneTestResult', '✅ OTP sent successfully!', 'success');
+                addTestResult('phoneTestResult', '📱 Check your phone and enter the OTP code', 'info');
+
+            } catch (error) {
+                addTestResult('phoneTestResult', `❌ Failed to send OTP: ${error.message}`, 'error');
+                
+                if (error.code === 'auth/too-many-requests') {
+                    addTestResult('phoneTestResult', '⚠️ Too many requests. Try again later.', 'warning');
+                } else if (error.code === 'auth/invalid-phone-number') {
+                    addTestResult('phoneTestResult', '⚠️ Invalid phone number format', 'warning');
+                }
+            }
+        }
+
+        async function verifyTestOTP() {
+            const otpCode = document.getElementById('testOtp').value;
+
+            if (!otpCode || otpCode.length !== 6) {
+                addTestResult('phoneTestResult', '❌ Please enter a valid 6-digit OTP', 'error');
+                return;
+            }
+
+            if (!testConfirmationResult) {
+                addTestResult('phoneTestResult', '❌ No OTP session. Send OTP first.', 'error');
+                return;
+            }
+
+            addTestResult('phoneTestResult', '🔍 Verifying OTP...', 'info');
+
+            try {
+                const result = await testConfirmationResult.confirm(otpCode);
+                addTestResult('phoneTestResult', '✅ OTP verification successful!', 'success');
+                addTestResult('phoneTestResult', `📱 Phone verified: ${result.user.phoneNumber}`, 'info');
+                
+                // Logout after test
+                setTimeout(async () => {
+                    await window.firebaseAuth.signOut();
+                    addTestResult('phoneTestResult', '🚪 Logged out after test', 'info');
+                    document.getElementById('otpSection').style.display = 'none';
+                }, 3000);
+
+            } catch (error) {
+                addTestResult('phoneTestResult', `❌ OTP verification failed: ${error.message}`, 'error');
+            }
+        }
+
+        function runAllTests() {
+            addTestResult('testResults', '🚀 Running comprehensive authentication tests...', 'info');
+            
+            testFirebaseConnection();
+            
+            setTimeout(() => {
+                addTestResult('testResults', '📧 Email registration test available - click Register button', 'info');
+                addTestResult('testResults', '🔍 Google authentication test available - click Google Login button', 'info');
+                addTestResult('testResults', '📱 Phone authentication test available - enter phone number and test', 'info');
+                addTestResult('testResults', '✅ All tests initialized. Use individual test buttons.', 'success');
+            }, 2000);
+        }
+
+        function clearAllResults() {
+            document.getElementById('testResults').innerHTML = '';
+            document.getElementById('emailTestResult').innerHTML = '';
+            document.getElementById('googleTestResult').innerHTML = '';
+            document.getElementById('phoneTestResult').innerHTML = '';
+            document.getElementById('otpSection').style.display = 'none';
+        }
+
+        async function logoutCurrentUser() {
+            if (window.firebaseAuth && window.firebaseAuth.currentUser) {
+                await window.firebaseAuth.signOut();
+                addTestResult('testResults', '🚪 User logged out', 'info');
+            } else {
+                addTestResult('testResults', '👤 No user currently logged in', 'info');
+            }
+        }
+
+        // Auto-run connection test on page load
+        window.addEventListener('load', () => {
+            setTimeout(testFirebaseConnection, 1000);
+        });
+    </script>
+</body>
+</html>
